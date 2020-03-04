@@ -1,14 +1,13 @@
 const stream = require('stream')
-const path = require('path')
 
-module.exports = function nanikaify(transform, filter)
+module.exports = function nanikaify(transform, condition)
 {
     return function(filename, opts) {
         opts = Object.assign({_flags: {}}, opts)
 
-        if (typeof filter === 'string' && path.extname(filename) !== filter)
+        if (typeof condition === 'string' && !filename.endsWith(condition))
             return new stream.PassThrough()
-        if (typeof filter === 'function' && filter(filename, opts))
+        if (typeof condition === 'function' && !condition(filename, opts))
             return new stream.PassThrough()
 
         const buffers = []
